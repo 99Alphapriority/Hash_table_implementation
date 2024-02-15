@@ -122,6 +122,72 @@ static int ht_get_hash(const char* s, const int m, const int attempt)
 	return (hash_a + (attempt * (hash_b + 1)))%m;
 }
 
+/**********************************************************************
+Function Name:	ht_insert
+Arguments:	table pointer, key string , value string
+Description:
+		Uses the hash function to find an empty bucket and 
+		insert the item. After insertion increment the table
+		count variable.
+Return value:	void
+**********************************************************************/
+void ht_insert(ht_hash_table *table, const char* key, const char* value)
+{
+	ht_item *item = ht_new_item(key, value);
+	int index = ht_get_hash(item->key, table->size, 0);
+	ht_item* currItem = table->items[index];
+	int i = 1;	//number of attempts
+	
+	/*
+	if the bucket is not empty then perform hashing again by 
+	incrementing the attempt variable untill an empty bucket is 
+	found
+	*/
+
+	while(NULL != currItem)
+	{
+		index = ht_get_hash(item->key, table->size, i);
+		currItem = table->items[index];
+		i++;
+	}
+
+	table->items[index] = item;
+	table->count++;
+}
+
+/********************************************************************
+Function Name:	ht_search
+Arguments:	table pointer, key string
+Description:
+		Uses hash function to find the bucket index and
+		compares the key attribute. If key doesn't match
+		run hash function again until the key is found.
+		If the key is not found return NULL.
+Retrun value:	value string
+********************************************************************/
+char* ht_search(ht_hash_table *table, const char* key)
+{
+	int index = ht_get_hash(key, table->size, 0);
+	ht_item* item = table->items[index];
+	int i = 1;	//number of attempts
+
+	while(NULL != item)
+	{
+		if(strcmp(item->key, key) == 0)
+			return item->value;
+		index = ht_get_hash(key, table->size, i);
+
+		//check to ensure that index is not out of bound
+		if(table->size <= index)
+			return NULL;
+
+		item = table->items[index];
+		i++;
+	}
+
+	return NULL;
+}
+
 int main()
 {
 	ht_hash_table* ht = ht_new();
