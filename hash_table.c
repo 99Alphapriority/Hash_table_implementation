@@ -5,6 +5,9 @@
 
 #include "hash_table.h"
 
+#define HT_PRIME_1 151
+#define HT_PRIME_2 163
+
 /************************************************************************
 Function Name:	ht_new_item
 Arguments:	key, value
@@ -81,13 +84,13 @@ void ht_del_hash_table(ht_hash_table* table)
 
 /************************************************************************
 Function Name:	ht_hash
-Arguments:	key string, int a, size of bucket
+Arguments:	key string, int a, size of bucket array
 Description:
 		Function that takes a string as an input and performs
 		a hash function on it. The result is a large integer
 		that is reduced by dividing it by the size of the bucket
 		and returning the remainder.
-Return value:	key integer
+Return value:	int index
 ************************************************************************/
 static int ht_hash(const char* s, const int a, const int m)
 {
@@ -101,6 +104,22 @@ static int ht_hash(const char* s, const int a, const int m)
 	}
 
 	return (int)hash;
+}
+
+/***********************************************************************
+Function Name:	ht_get_hash
+Arguments:	key string, size of bucket array, int attempt
+Description:
+		If different inputs result to same index after hashing,
+		performing Double hashing to chose a new index.
+Return value:	int index
+***********************************************************************/
+static int ht_get_hash(const char* s, const int m, const int attempt)
+{
+	const int hash_a = ht_hash(s, HT_PRIME_1, m);
+	const int hash_b = ht_hash(s, HT_PRIME_2, m);
+
+	return (hash_a + (attempt * (hash_b + 1)))%m;
 }
 
 int main()
