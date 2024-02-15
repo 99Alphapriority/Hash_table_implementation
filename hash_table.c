@@ -7,12 +7,12 @@
 
 /************************************************************************
 Function Name:	ht_new_item
-Arguments:		key, value
+Arguments:	key, value
 Description:
-				Initialisation function for ht_item structure pointer.
-				Allocates a chunk of memory of size of an ht_item, and 
-				saves a copy of the strings key and value in the new 
-				chunk of memory.
+		Initialisation function for ht_item structure pointer.
+		Allocates a chunk of memory of size of an ht_item, and 
+		saves a copy of the strings key and value in the new 
+		chunk of memory.
 Return value:	A (ht_item)pointer to a chunk of memory.
 ************************************************************************/
 static ht_item* ht_new_item(const char* k, const char* v)
@@ -26,11 +26,11 @@ static ht_item* ht_new_item(const char* k, const char* v)
 
 /************************************************************************
 Function Name:	ht_new
-Arguments:		void
+Arguments:	void
 Description:
-				Initialises a new nash table. Initialise the array of
-				ht_item with calloc. A NULL entry in the array indicates
-				that the bucket is empty.
+		Initialises a new nash table. Initialise the array of
+		ht_item with calloc. A NULL entry in the array indicates
+		that the bucket is empty.
 Return value:	A (ht_hash_table)pointer to a chunk of memory.
 ************************************************************************/
 ht_hash_table* ht_new(void)
@@ -46,9 +46,9 @@ ht_hash_table* ht_new(void)
 
 /************************************************************************
 Function Name:	ht_del_item
-Arguments:		item pointer
+Arguments:	item pointer
 Description:
-				Function to free the memory allocated to the item pointer
+		Function to free the memory allocated to the item pointer
 Return value:	void
 ************************************************************************/
 static void ht_del_item(ht_item* item)
@@ -60,10 +60,10 @@ static void ht_del_item(ht_item* item)
 
 /************************************************************************
 Function Name: 	ht_del_hash_table
-Arguments:		table pointer
+Arguments:	table pointer
 Description:
-				Function to free the memory allocated to the ht_items 
-				array and the hash table itself.
+		Function to free the memory allocated to the ht_items 
+		array and the hash table itself.
 Return value:	void
 ************************************************************************/
 void ht_del_hash_table(ht_hash_table* table)
@@ -81,12 +81,12 @@ void ht_del_hash_table(ht_hash_table* table)
 
 /************************************************************************
 Function Name:	ht_hash
-Arguments:		key string, int a, size of bucket
+Arguments:	key string, int a, size of bucket
 Description:
-				Function that takes a string as an input and performs
-				a hash function on it. The result is a large integer
-				that is reduced by dividing it by the size of the bucket
-				and returning the remainder.
+		Function that takes a string as an input and performs
+		a hash function on it. The result is a large integer
+		that is reduced by dividing it by the size of the bucket
+		and returning the remainder.
 Return value:	key integer
 ************************************************************************/
 static int ht_hash(const char* s, const int a, const int m)
