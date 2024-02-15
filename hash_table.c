@@ -1,6 +1,7 @@
 #include<stdio.h>
 #include<stdlib.h>
 #include<string.h>
+#include<math.h>
 
 #include "hash_table.h"
 
@@ -78,6 +79,30 @@ void ht_del_hash_table(ht_hash_table* table)
 	free(table);
 }
 
+/************************************************************************
+Function Name:	ht_hash
+Arguments:		key string, int a, size of bucket
+Description:
+				Function that takes a string as an input and performs
+				a hash function on it. The result is a large integer
+				that is reduced by dividing it by the size of the bucket
+				and returning the remainder.
+Return value:	key integer
+************************************************************************/
+static int ht_hash(const char* s, const int a, const int m)
+{
+	long hash = 0;
+	const int len_s = strlen(s);
+
+	for(int i =0; i<len_s; i++)
+	{
+		hash+=(long)pow(a,(len_s - (i+1))) * s[i];
+		hash %= m;
+	}
+
+	return (int)hash;
+}
+
 int main()
 {
 	ht_hash_table* ht = ht_new();
@@ -85,3 +110,4 @@ int main()
 	ht_del_hash_table(ht);
 	return 0;
 }
+
