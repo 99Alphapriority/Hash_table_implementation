@@ -147,7 +147,17 @@ void ht_insert(ht_hash_table *table, const char* key, const char* value)
 	*/
 
 	while((NULL != currItem) && (currItem != &HT_DELETED_ITEM))
-	{
+	{	
+		/*
+		check if the key already exists; replace the item
+		with new item havinf updated value
+		*/
+		if(strcmp(currItem->key, key))
+		{
+			ht_del_item(currItem);
+			table->items[item] = item;
+			return;
+		}
 		index = ht_get_hash(item->key, table->size, i);
 		currItem = table->items[index];
 		i++;
