@@ -8,6 +8,8 @@
 #define HT_PRIME_1 151
 #define HT_PRIME_2 163
 
+static ht_item HT_DELETED_ITEM = {NULL, NULL};
+
 /************************************************************************
 Function Name:	ht_new_item
 Arguments:	key, value
@@ -144,7 +146,7 @@ void ht_insert(ht_hash_table *table, const char* key, const char* value)
 	found
 	*/
 
-	while(NULL != currItem)
+	while((NULL != currItem) && (currItem != &HT_DELETED_ITEM))
 	{
 		index = ht_get_hash(item->key, table->size, i);
 		currItem = table->items[index];
@@ -173,12 +175,15 @@ char* ht_search(ht_hash_table *table, const char* key)
 
 	while(NULL != item)
 	{
-		if(strcmp(item->key, key) == 0)
-			return item->value;
+		if(&HT_DELETED_ITEM != item)
+		{
+			if(0 == strcmp(item->key, key))
+				return item->value;
+		}
 		index = ht_get_hash(key, table->size, i);
 
 		//check to ensure that index is not out of bound
-		if(table->size <= index)
+		if(table->size < index)
 			return NULL;
 
 		item = table->items[index];
@@ -186,6 +191,44 @@ char* ht_search(ht_hash_table *table, const char* key)
 	}
 
 	return NULL;
+}
+
+/********************************************************************
+Function Name:	ht_delete
+Arguments:	table pointer, key string
+Description:
+		Function for deleting the item from the hash table.
+		Instead of actually deleting it is replaced by a
+		global sentinel item.
+Return value:	void
+********************************************************************/
+void ht_delete(ht_hash_table *table, const char* key)
+{
+	int index = ht_get_hash(key, table->size, 0);
+	ht_item *item = table->items[index];
+	int i = 1;
+
+	while(NULL != item)
+	{
+		if(&HT_DELETED_ITEM != item)
+		{
+			if(0 == strcmp(key, item->key))
+			{
+				ht_del_item(item);
+				table->items[index] = &HT_DELETED_ITEM;
+			}
+		}
+		index = ht_get_hash(key, table->size, i);
+		
+		//check to ensure that index is not out of bound
+		if(table->size < index)
+			fprintf(stderr,"index calculated is out of bound!!!!\n");
+
+		item = table->items[index];
+		i++;
+	}
+
+	table->count--;
 }
 
 int main()
