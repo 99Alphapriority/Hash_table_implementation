@@ -354,12 +354,3 @@ void ht_delete(ht_hash_table *table, const char* key)
 
 	table->count--;
 }
-
-int main()
-{
-	ht_hash_table* ht = ht_new();
-	fprintf(stderr,"New hash_table malloced at address: 0x%x\n",ht);
-	ht_del_hash_table(ht);
-	return 0;
-}
-
