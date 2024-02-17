@@ -105,8 +105,10 @@ void ht_del_hash_table(ht_hash_table* table)
 	{
 		ht_item *item = table->items[i];
 
-		if(NULL != item)
+		if((NULL != item) && (item != &HT_DELETED_ITEM))
+		{
 			ht_del_item(item);
+		}
 	}
 	free(table->items);
 	free(table);
@@ -260,8 +262,9 @@ void ht_insert(ht_hash_table *table, const char* key, const char* value)
 		check if the key already exists; replace the item
 		with new item havinf updated value
 		*/
-		if(strcmp(currItem->key, key))
+		if(0 == strcmp(currItem->key, key))
 		{
+
 			ht_del_item(currItem);
 			table->items[index] = item;
 			return;
@@ -338,6 +341,7 @@ void ht_delete(ht_hash_table *table, const char* key)
 		{
 			if(0 == strcmp(key, item->key))
 			{
+
 				ht_del_item(item);
 				table->items[index] = &HT_DELETED_ITEM;
 			}
